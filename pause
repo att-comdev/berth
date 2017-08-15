@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "Pausing..."
+while : ; do
+      sleep 3607
+done
