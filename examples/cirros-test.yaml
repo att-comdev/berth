@@ -1,0 +1,36 @@
+vmlist:
+  cirros-test:
+    enabled: true
+    vmconfig:
+      cpu:
+        vcpu: 1
+        ram_mb: 256
+      rootfs:
+        sourceurl: http://stupidest.org/vm/cirros-0.3.5-x86_64-disk.img
+        localtarget: cirros-vm.qcow2
+        pvc_size: 128Mi
+    netconfig:
+      ports:
+        ssh: 22
+        vnc: 5900
+    cloudconfig:
+      metadata: |
+        {
+            "uuid": "093772fe-d6a3-4eea-84bc-5966661a0c3e",
+            "name": "my-name",
+            "instance-id": "my-instance-id",
+            "availability-zone": "my-az",
+            "hostname": "my-hostname",
+            "local-hostname": "my-local-hostname",
+            "launch-index": "123"
+        }
+      userdata: |
+        #cloud-config
+        fqdn: cirros.example.com
+        users:
+          - name: root
+            ssh-authorized-keys:
+              - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPE/zGmNx3W52ztb/2vvTcgUN7RGbq172QXGcXKAagU1 user@host"
+              - "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBKVeMUpC6Ba0UwyLeCCWexr/sc4kYwKW6mTSTpcQHDm+F5UqoW3pnbGPn3WSJB2AbCMP9oG0qQrLP2zHmE7fyog= otheruser@otherhost"
+        ssh_pwauth: True
+      bogus_not_used: "this won't hurt anthing but shouldn't be here"
