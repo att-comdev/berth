@@ -1,26 +1,28 @@
 Berth is a deliberately minimalist VM runner for Kubernetes.
 
-I'm not 100% sold on the name; before merging we could change it...
-
 ## TL;DR Installation Guide
 
+Install the bare Berth chart:
 ```
-# Make sure you have Helm 2.5.x and Kubernetes 1.6.x
+# Have (recent) Helm and Kubernetes (2.5.x and 1.6.x or later)
 #
-# edit values.yaml; set class_name and ssh key
-#
-helm package berth
-helm install --name=berth ./berth-0.1.0.tgz # ...
+helm install --name=berth ./berth
 kubectl get pods -o wide
+```
+
+This should happen error free and be fairly quick.  At this stage
+install one of the examples.
+
+```
+# helm upgrade berth ./berth --values=examples/cirros-test.yaml
 ```
 
 You should be able to SSH to your VM at the Kubernetes IP for the
 container which you can retrieve with `kubectl get all -o wide`.  VNC
 access is available on port 5900.
 
-```
-ssh -i ./you-ssh-private-key root@ip.of.vm.pod
-```
+Additional examples may be added with additional `--values` arguments.
+
 <!-- https://mostsecure.pw/  -->
 
 ### Example
