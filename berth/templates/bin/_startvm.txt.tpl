@@ -2,7 +2,7 @@
 
 set -x
 
-echo "VER-0.1.0-1.2"
+echo "VER-0.1.0-1.3"
 
 # Returns the integer representation of an IP arg, passed in ascii
 # dotted-decimal notation (x.x.x.x)
@@ -258,4 +258,14 @@ setup_bridge_networking
 HOST_IP=`ip addr show dev $IFACE | grep "inet $IP" | awk '{print $2}' | cut -f1 -d/`
 VNC="-vnc $HOST_IP:0"
 
-exec $LAUNCHER qemu-system-x86_64 -enable-kvm  $VNC `eval echo $KVM_BLK_OPTS` `eval echo $KVM_NET_OPTS` -usbdevice tablet -nographic $KVM_ARGS
+exec $LAUNCHER qemu-system-x86_64 \
+     -smp "$IMG_VCPU" \
+     -m "$IMG_RAM_MB" \
+     -machine q35 \
+     -cpu host,+x2apic \
+     -vga vmware \
+     -enable-kvm \
+     $VNC \
+     `eval echo $KVM_BLK_OPTS` \
+     `eval echo $KVM_NET_OPTS` \
+     -usbdevice tablet -nographic $KVM_ARGS
