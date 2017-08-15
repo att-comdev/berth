@@ -1,23 +1,31 @@
 [Put these in Jira]
 
-*Require* ssh key, throw an error if missing.
-
-Chart definition vs values.yaml:
-
-    Move image source/target details from chart to values
-    (IMG_SOURCE/IMG_TARGET)
-
-    Move the VM definitions entirely into the values.yaml file; have
-    helm deployment process iterate over that creating multiple pods,
-    one for each VM.
-
-    Ideally this will allow incremental updates of pods without having
-    to know about the chart internals.
-
-    XXX Get examples of where we've done this before from Alan XXX
-
 Add Dockerfile; update the container image we use to Ubuntu 16.04 with
 a suitable KVM/Qemu.
 
 Consider moving to stateful sets for cleaner PVC associations.  See
-OSH MariaDB chart for an example of this.
+OSH MariaDB chart for an example of this.  One issue is that ss' will
+remain after the fact; this may not always be desirable
+
+One large mutable ConfigMap - not 2x per VM/POD
+
+cloudinit vs cloud-config vs cloudconfig naming in various places
+
+we have various types of 'names' when it comes to vms; some are used
+in part for configmap names, some as hostnames, some for annotations;
+it would be good to work out what the minimum required names are and
+just implement those with cleaner semantics
+
+instance_id sees misplaced and probably doesn't do what people think
+it does, fix or remove it
+
+yaml lint/validator tool; it's *really* easy to get the structure
+wrong; ideally the tool should have basic knowledge of the cloud-init
+stufs as well - because well, i hosed those more than once
+
+annotations/checksums so that when a VMs parameters change it will be
+restarted (in cases when it should); this might require updating the
+VM definition structure to be clear on which parameters require a VM
+restart
+
+type_noimpl isn't well, implemented ... nuke for now
