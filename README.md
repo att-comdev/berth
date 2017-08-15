@@ -67,6 +67,8 @@ At a high level, it works like this:
   ConfigMap mounts with the same name and turning them into an ISO
   presented to the guest.
 
+FIXME ... this is all out of date ... someone needs to update this
+
 The startvm entry-point supports several environment variables:
 
 * `IMG_SOURCE` which is an http or https URL that contains a qcow2
