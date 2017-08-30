@@ -1,6 +1,9 @@
 # This Makefile is used during development and can usually be ignored
 # by most people.
 
+validation:
+	python validate.py example-vmlist-bad.yaml
+
 all: test
 
 default: test
