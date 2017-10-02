@@ -27,7 +27,7 @@ def validate_leaves(prefix, vm, l):
                 print "[E] Wrong type for %s (got '%s' expected '%s')" % (prefix+n, type(vm[n]).__name__, type(t).__name__)
                 continue
         except:
-            print "Unable to validate leaf:", prefix+n
+            print "[W] Unable to validate leaf:", prefix+n
             continue
 
         valid_leaves.append(n)
@@ -42,19 +42,22 @@ def validate_leaves(prefix, vm, l):
 
 def validate_file(filename):
     yamlgen = yaml.load_all(open(filename))
-    top = [ x  for x in yamlgen ][0]
+    yamlgen = list(yamlgen)
+    if not yamlgen or not yamlgen[0]:
+        print "[E] File contains no valid yaml"
+        return
+    top = list(yamlgen)[0]
 
     vmlist = top["vmlist"]
-    index = 0
-    for vm in vmlist:
-        index += 1
-        name = ""
-        if "name" in vm:
-            name = vm["name"]
+    if not vmlist  or   type(vmlist) != type(dict()):
+        print "[E] No vmlist dict declared"
+        return
 
-        print "Checking:", name, ("(index %d)" % index)
+    for name in vmlist:
+        vm = vmlist[name]
+        print "VM:", name
 
-        vl = validate_leaves("", vm, [ ("name",str()), ("enabled",bool()), ("vmconfig",dict()), ("netconfig",dict()), ("cloudconfig",dict()) ] )
+        vl = validate_leaves("", vm, [ ("enabled",bool()), ("vmconfig",dict()), ("netconfig",dict()), ("cloudconfig",dict()) ] )
         if "vmconfig" in vl:
             # validate vmconfig
             vmconfig = vm["vmconfig"]
@@ -76,7 +79,7 @@ def validate_file(filename):
             if "rootfs" in vl2:
                 # validate vmconfig.rootfs
                 rootfs = vmconfig["rootfs"]
-                vl3 = validate_leaves("vmconfig.rootfs.", rootfs, [ ("sourceurl",str()), ("type_notimpl",str()), ("localtarget",str()), ("pvc_size",str()), ("pvc_class",str(), True) ])
+                vl3 = validate_leaves("vmconfig.rootfs.", rootfs, [ ("sourceurl",str()), ("localtarget",str()), ("pvc_size",str()), ("pvc_class",str(), True) ])
 
                 if "sourceurl" in vl3:
                     if not rootfs["sourceurl"].startswith("http"):
@@ -91,7 +94,7 @@ def validate_file(filename):
         if "cloudconfig" in vl:
             # validate cloudconfig
             cloudconfig = vm["cloudconfig"]
-            vl2 = validate_leaves("cloudconfig.", cloudconfig, [ ("instance_id",str()), ("metadata",str()), ("userdata",str()) ])
+            vl2 = validate_leaves("cloudconfig.", cloudconfig, [ ("metadata",str()), ("userdata",str()) ])
 
             # check things look sane
             for yamlobj in [ "metadata", "userdata" ]:
@@ -101,9 +104,9 @@ def validate_file(filename):
                     except:
                         print "[E] Bad yaml for vmconfig.cloudconfig.%s" % yamlobj
 
-        print "Done"
-        print
 
 if __name__ == "__main__":
     for fn in sys.argv[1:]:
+        print "Filename:", fn
         validate_file(fn)
+        print
