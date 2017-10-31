@@ -41,7 +41,7 @@ spec:
           securityContext:
             privileged: true
           command:
-            - /usr/local/bin/startvm
+            - /usr/local/bin/startvm.sh
 {{- if $vm.netconfig.ports }}
           ports:
 {{- range $for, $port := $vm.netconfig.ports }}
@@ -55,7 +55,7 @@ spec:
 {{- end }}
           volumeMounts:
             - name: volume-startvm
-              mountPath: /usr/local/bin/startvm
+              mountPath: /usr/local/bin/startvm.sh
               subPath: startvm
             - name: image
               mountPath: /image
