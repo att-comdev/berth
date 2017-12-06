@@ -1,6 +1,8 @@
 vmlist:
   cirros-test:
     enabled: true
+    svc:
+      category: meow
     vmconfig:
       cpu:
         vcpu: 1

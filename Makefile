@@ -11,16 +11,20 @@ test-validate:
 	python validate.py examples/*
 	@echo ===========================================================================
 
-
-test-install: build
+do-install:
 	@echo
 	-helm delete --purge berth
 	@echo
 	helm install --name=berth --debug ./berth
+
+test-install: build do-install test-upgrade
+
+test-upgrade:
 	helm upgrade --debug berth ./berth \
 			--values examples/cirros-test.yaml \
 			--values examples/demo-ub14-apache.yaml \
-			--values examples/ub16-smp-test.yaml
+			--values examples/ub16-smp-test.yaml \
+			--values examples/svc-apache.yaml
 	@sleep 5 # give k8s a chance to see the IP
 	@echo
 	kubectl get pods -o wide

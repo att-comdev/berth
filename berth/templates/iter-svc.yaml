@@ -1,0 +1,25 @@
+
+{{- $envAll := . }}
+
+{{ range $name, $svc := .Values.svc }}
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ $name }}
+spec:
+  selector:
+    app: berth
+    category: {{ $svc.category }}
+    service-name: {{ $svc.name }}
+  ports:
+  - name: port-{{- $svc.port }}
+    protocol: TCP
+    port: {{ $svc.port }}
+    targetPort: {{ $svc.port }}
+{{- if $svc.nodePort }}
+    nodePort: {{ $svc.nodePort }}
+  type: NodePort
+{{- end }}
+---
+{{- end }}

@@ -1,6 +1,9 @@
 vmlist:
   demo-ub14-apache:
     enabled: true
+    svc:
+      name: apache
+      category: http
     vmconfig:
       cpu:
         vcpu: 1

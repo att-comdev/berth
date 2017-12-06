@@ -1,0 +1,11 @@
+# this should let us test things doing:
+#
+#   curl test-web.default.svc.cluster.local
+
+svc:
+  test-web:
+    category: http
+    name: apache
+    port: 80
+    nodePort: 30030 # optional
+

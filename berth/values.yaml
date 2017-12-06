@@ -10,3 +10,4 @@ labels:
 # override file and helm --values=... for your specific values
 vmlist: { }
 
+svc: { }
