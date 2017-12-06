@@ -40,20 +40,9 @@ def validate_leaves(prefix, vm, l):
 
     return valid_leaves
 
-def validate_file(filename):
-    try:
-        yamlgen = list(yaml.safe_load_all(open(filename)))
-    except yaml.parser.ParserError:
-        print "[E] Invalid yaml"
-        return
-
-    if not yamlgen or not yamlgen[0]:
-        print "[E] File contains no valid yaml"
-        return
-    top = list(yamlgen)[0]
-
-    vmlist = top["vmlist"]
+def validate_vmlist(vmlist):
     if not vmlist  or  not isinstance(vmlist, dict):
+        # XXX this shouldn't happen, bubble this up
         print "[E] No vmlist dict declared"
         return
 
@@ -108,6 +97,31 @@ def validate_file(filename):
                     except:
                         print "[E] Bad yaml for vmconfig.cloudconfig.%s" % yamlobj
 
+def validate_svc(svc):
+    # XXX do this up a level
+    if not svc  or  not isinstance(svc, dict):
+        print "[E] No svc dict declared"
+        return
+    # XXX need to do something here
+
+def validate_file(filename):
+    try:
+        yamlgen = list(yaml.safe_load_all(open(filename)))
+    except yaml.parser.ParserError:
+        print "[E] Invalid yaml"
+        return
+
+    if not yamlgen or not yamlgen[0]:
+        print "[E] File contains no valid yaml"
+        return
+    top = list(yamlgen)[0]
+
+    if "vmlist" in top:
+        validate_vmlist(top["vmlist"])
+    elif "svc" in top:
+        validate_svc(top["svc"])
+    else:
+        print "[E] Unexpected top level" % top.keys()
 
 if __name__ == "__main__":
     for fn in sys.argv[1:]:

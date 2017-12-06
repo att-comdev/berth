@@ -1,3 +1,6 @@
+# used for a 'local override'
+GNUmakefile
+
 # Misc
 helm.log
 berth-0.1.0.tgz

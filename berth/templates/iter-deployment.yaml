@@ -16,6 +16,14 @@ spec:
     metadata:
       labels:
         app: berth
+{{- if $vm.svc }}
+{{- if $vm.svc.name }}
+        service-name: {{ $vm.svc.name }}
+{{- end }}
+{{- if $vm.svc.category }}
+        category: {{ $vm.svc.category }}
+{{- end }}
+{{- end }}
       annotations:
         pod.beta.kubernetes.io/hostname: {{ $name }}
     spec:
